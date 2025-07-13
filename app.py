@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -11,23 +10,19 @@ from tensorflow.keras import layers, models
 EMBED_DIM = 100
 W2V_FILE = "glove.6B.100d.w2v.txt"
 
-# Load GloVe Word2Vec model
 @st.cache_resource
 def load_embeddings():
     return KeyedVectors.load_word2vec_format(W2V_FILE, binary=False)
 
-# Text cleaning
 def clean(text):
     text = text.lower()
     text = re.sub(r"[^a-z0-9']+", " ", text)
     return text.strip()
 
-# Vectorise input message
 def vectorise(tokens, kv):
-    vecs = [kv[word] for word in kv if word in tokens]
+    vecs = [kv[word] for word in tokens if word in kv]
     return np.mean(vecs, axis=0) if vecs else np.zeros(EMBED_DIM, dtype=np.float32)
 
-# Load trained model
 @st.cache_resource
 def load_model():
     model = models.Sequential([
@@ -37,10 +32,9 @@ def load_model():
         layers.Dense(1, activation='sigmoid')
     ])
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    model.load_weights("spam_model_weights.h5")
+    model.load_weights("spam_model.weights.h5")
     return model
 
-# UI layout
 st.title("📩 SMS Spam Classifier")
 st.write("Enter a text message and this app will classify it as **Spam** or **Not Spam** using GloVe embeddings + a neural network.")
 
