@@ -1,6 +1,6 @@
 streamlit==1.25.0
 gensim==4.3.2
 scikit-learn==1.3.0
-tensorflow==2.12.0      # last TF wheel that supports 3.11 on Streamlit Cloud
+tensorflow==2.12.0
 pandas==1.5.3
 numpy==1.24.3
